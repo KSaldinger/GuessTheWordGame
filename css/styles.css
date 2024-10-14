@@ -122,6 +122,19 @@ input:focus {
   cursor: pointer;
 }
 
+.play-again {
+  padding: 1.25em 3.5em;
+  border-radius: 70px;
+  margin-top: 3em;
+  font-size: 1em;
+  /*color: #fff;
+  background: #ff8d5c;
+  align-self: center;
+  outline: none;
+  border: 0;
+  cursor: pointer;*/
+}
+
 .guess:active,
 .play-again:active,
 .guess:focus,
