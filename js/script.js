@@ -8,8 +8,21 @@ const guessesLeft = document.querySelector("span");
 const message = document.querySelector(".message");   /// where message will appear
 const againButton = document.querySelector(".play-again");  // play again button
 
-const word = "magnolia"; // starting word 
+let word = "magnolia"; // starting word 
 const guessedLetters = [];
+let remainingGuesses = 8;
+
+////////  get word  ////////
+const getWord = async function () {
+    const response = await fetch ("https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt");
+    const words = await response.text();
+    const wordArray = words.split("\n");
+    const randomIndex = Math.floor(Math.random() * wordArray.length);
+    word = wordArray[randomIndex].trim();
+    updateWord(word);
+};
+getWord();//// getting the game started with your random word
+
 
 //////////   Placeholders for the letters/word   /////
 const updateWord = function (word) {
@@ -68,6 +81,7 @@ const makeGuess = function(letter) {
         } else {
             guessedLetters.push(letter);
             console.log(guessedLetters);
+            howManyGuesses(letter);
             playersLetters();
             newestUpdate(guessedLetters);
         }   
@@ -100,7 +114,30 @@ const newestUpdate = function (guessedLetters) {
     inProgress.innerText = updatedCharacters.join("");
     ifWinner(); 
 };
-console.log(newestUpdate);
+//console.log(newestUpdate);
+
+
+////////////  Number of guesses left //////
+
+const howManyGuesses = function (letter) {
+    const upperWord = word.toUpperCase();
+
+    if (!upperWord.includes(letter)) {
+        // boo hoo, bad guess, loose a chance
+        message.innerText = `The letter ${letter}, is not in your word.`;
+        remainingGuesses -= 1;
+    } else {
+        message.innerText = `You guessed one correctly, your word has the letter ${letter}!`;
+    }
+
+    if (remainingGuesses === 0) {
+        message.innerText = `Game over! You are out of guesses. The word was ${word}.`;
+    } else if (remainingGuesses === 1) {
+        guessesLeft.innerText = `${remainingGuesses} guess`;
+    } else {
+        guessesLeft.innerText = `${remainingGuesses} guesses`;
+    }
+};
 
 
 ///////// Did the player WIN the game???  ///////
